@@ -51,8 +51,6 @@ async function generatePdf(file, options, callback) {
       content: `@page {size:${width}px ${height}px;}`,
     });
   }
-
-}
   return Promise.props(page.pdf(options))
     .then(async function(data) {
        await browser.close();
