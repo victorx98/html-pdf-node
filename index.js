@@ -39,16 +39,17 @@ async function generatePdf(file, options, callback) {
 
   if(options.noPagination === true) {
     // default width 1200px
-    // if(!options.width) {
-    //   options.width = '1200px';
-    // }
+    if(!options.width) {
+      options.width = 1200;
+    }
     // we get the height based on the width
-    // await page.setViewport({ width: options.width})
+    await page.setViewport({ width: options.width})
     let height = await page.evaluate(
       () => document.documentElement.offsetHeight
     );
     options.height = height+'px';
     delete options.noPagination;
+    options.width = options.width+'px';
     if(options.format) {
       delete options.format;
     }
