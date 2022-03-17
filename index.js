@@ -55,7 +55,7 @@ async function generatePdf(file, options, callback) {
     }
     console.log("options:", options);
     await page.addStyleTag({
-      content: `@page {size: auto;}`,
+      content: `@page {size:${width} ${height};}`,
     });
   }
   return Promise.props(page.pdf(options))
