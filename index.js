@@ -43,7 +43,7 @@ async function generatePdf(file, options, callback) {
       options.width = 1200;
     }
     // we get the height based on the width
-    await page.setViewport({ width: options.width})
+    await page.setViewport({ width: options.width, height: 1600})
     let height = await page.evaluate(
       () => document.documentElement.offsetHeight
     );
