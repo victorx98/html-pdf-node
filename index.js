@@ -21,7 +21,6 @@ async function generatePdf(file, options, callback) {
 
   if(file.content) {
     data = await inlineCss(file.content, {url:"/"});
-    console.log("Compiling the template with handlebars")
     // we have compile our code with handlebars
     const template = hb.compile(data, { strict: true });
     const result = template(data);
@@ -37,6 +36,23 @@ async function generatePdf(file, options, callback) {
     });
   }
 
+  if(options.noPagination === true) {
+    let [width, height] = await page.evaluate(
+      () => [document.documentElement.offsetWidth, document.documentElement.offsetHeight]
+    );
+    options.width = width+'px';
+    options.height = height+'px';
+    delete options.noPagination;
+    if(options.format) {
+      delete options.format;
+    }
+    console.log("options:", options);
+    await page.addStyleTag({
+      content: `@page {size:${width}px ${height}px;}`,
+    });
+  }
+
+}
   return Promise.props(page.pdf(options))
     .then(async function(data) {
        await browser.close();
