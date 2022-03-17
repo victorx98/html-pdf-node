@@ -37,10 +37,15 @@ async function generatePdf(file, options, callback) {
   }
 
   if(options.noPagination === true) {
-    let [width, height] = await page.evaluate(
-      () => [document.documentElement.offsetWidth, document.documentElement.offsetHeight]
+    // default width 1200px
+    if(!options.width) {
+      options.width = '1200px';
+    }
+    // we get the height based on the width
+    await page.setViewport({ width: options.width})
+    let height = await page.evaluate(
+      () => document.documentElement.offsetHeight
     );
-    options.width = width+'px';
     options.height = height+'px';
     delete options.noPagination;
     if(options.format) {
@@ -48,7 +53,7 @@ async function generatePdf(file, options, callback) {
     }
     console.log("options:", options);
     await page.addStyleTag({
-      content: `@page {size:${width}px ${height}px;}`,
+      content: `@page {size:${options.width} ${options.height};}`,
     });
   }
   return Promise.props(page.pdf(options))
